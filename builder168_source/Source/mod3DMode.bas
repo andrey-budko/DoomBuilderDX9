@@ -228,21 +228,21 @@ Private numsubsectors As Long
 Private numnodes As Long
 
 'Vertex Buffers
-Private SubSectorFloors() As Direct3DVertexBuffer8
-Private SubSectorCeilings() As Direct3DVertexBuffer8
-Private SidedefUpper() As Direct3DVertexBuffer8
-Private SidedefMiddle() As Direct3DVertexBuffer8
-Private SidedefLower() As Direct3DVertexBuffer8
+Private SubSectorFloors() As Direct3DVertexBuffer9
+Private SubSectorCeilings() As Direct3DVertexBuffer9
+Private SidedefUpper() As Direct3DVertexBuffer9
+Private SidedefMiddle() As Direct3DVertexBuffer9
+Private SidedefLower() As Direct3DVertexBuffer9
 Private d_SubSectorFloors() As Long
 Private d_SubSectorCeilings() As Long
 Private d_SidedefUpper() As Long
 Private d_SidedefMiddle() As Long
 Private d_SidedefLower() As Long
-Private i_SectorFloors() As Direct3DTexture8
-Private i_SectorCeilings() As Direct3DTexture8
-Private i_SidedefUpper() As Direct3DTexture8
-Private i_SidedefMiddle() As Direct3DTexture8
-Private i_SidedefLower() As Direct3DTexture8
+Private i_SectorFloors() As Direct3DTexture9
+Private i_SectorCeilings() As Direct3DTexture9
+Private i_SidedefUpper() As Direct3DTexture9
+Private i_SidedefMiddle() As Direct3DTexture9
+Private i_SidedefLower() As Direct3DTexture9
 
 'Rendering
 Private r_subsectors(MAX_VISIBLE_SSECTORS) As Long
@@ -258,24 +258,24 @@ Private r_numprevsubsectors As Long
 Private r_numprevsidedefs As Long
 Private r_discards(MAX_VISIBLE_SIDEDEFS) As Long
 Private r_numdiscards As Long
-Private r_maintext As Direct3DVertexBuffer8
+Private r_maintext As Direct3DVertexBuffer9
 Private r_nummaintextfaces As Long
-Private r_subtext As Direct3DVertexBuffer8
+Private r_subtext As Direct3DVertexBuffer9
 Private r_numsubtextfaces As Long
-Private r_crosshair As Direct3DVertexBuffer8
-Private r_texpoly(0 To (TEXTURE_COLS * TEXTURE_ROWS - 1)) As Direct3DVertexBuffer8
+Private r_crosshair As Direct3DVertexBuffer9
+Private r_texpoly(0 To (TEXTURE_COLS * TEXTURE_ROWS - 1)) As Direct3DVertexBuffer9
 Private r_texclass(0 To (TEXTURE_COLS * TEXTURE_ROWS - 1)) As clsImage
-Private r_texdesc As Direct3DVertexBuffer8
+Private r_texdesc As Direct3DVertexBuffer9
 Private r_numtexdescfaces As Long
-Private r_texname As Direct3DVertexBuffer8
+Private r_texname As Direct3DVertexBuffer9
 Private r_numtexnamefaces As Long
-Private r_infopanel As Direct3DVertexBuffer8
-Private r_infotexts(0 To 9) As Direct3DVertexBuffer8
+Private r_infopanel As Direct3DVertexBuffer9
+Private r_infotexts(0 To 9) As Direct3DVertexBuffer9
 Private r_numinfotextfaces(0 To 9) As Long
-Private r_thingboxvb As Direct3DVertexBuffer8
-Private r_thingboxlines As Direct3DVertexBuffer8
-Private r_thingarrow As Direct3DVertexBuffer8
-Private r_thingsprite As Direct3DVertexBuffer8
+Private r_thingboxvb As Direct3DVertexBuffer9
+Private r_thingboxlines As Direct3DVertexBuffer9
+Private r_thingarrow As Direct3DVertexBuffer9
+Private r_thingsprite As Direct3DVertexBuffer9
 
 'Configuration settings
 Private c_videowidth As Long
@@ -293,12 +293,12 @@ Private t_brightness(0 To 255) As Long
 Private t_fogness(0 To 255) As Long
 
 'Textures
-Private tex_font As Direct3DTexture8
-Private tex_crosshair As Direct3DTexture8
-Private tex_unknown As Direct3DTexture8
-Private tex_missing As Direct3DTexture8
-Private tex_thingbox As Direct3DTexture8
-Private tex_thingarrow As Direct3DTexture8
+Private tex_font As Direct3DTexture9
+Private tex_crosshair As Direct3DTexture9
+Private tex_unknown As Direct3DTexture9
+Private tex_missing As Direct3DTexture9
+Private tex_thingbox As Direct3DTexture9
+Private tex_thingarrow As Direct3DTexture9
 
 'Matrices
 Private matrixView As D3DMATRIX
@@ -1867,7 +1867,7 @@ Private Sub CreateTexturePreviews()
      Next i
 End Sub
 
-Public Function CreateTLVertexBuffer(ByRef polygon() As TLVERTEX, ByVal VertCount As Long) As Direct3DVertexBuffer8
+Public Function CreateTLVertexBuffer(ByRef polygon() As TLVERTEX, ByVal VertCount As Long) As Direct3DVertexBuffer9
      Dim BUFFERSIZE As Long
      
      'Calculate buffer size in bytes
@@ -1877,10 +1877,10 @@ Public Function CreateTLVertexBuffer(ByRef polygon() As TLVERTEX, ByVal VertCoun
      Set CreateTLVertexBuffer = D3DD.CreateVertexBuffer(BUFFERSIZE, D3DUSAGE_DYNAMIC Or D3DUSAGE_WRITEONLY, TLVERTEXFVF, D3DPOOL_DEFAULT)
      
      'Copy the vertices to the buffer
-     D3DVertexBuffer8SetData CreateTLVertexBuffer, 0, BUFFERSIZE, D3DLOCK_DISCARD, polygon(0)
+     CreateTLVertexBuffer.SetData 0, BUFFERSIZE, VarPtr(polygon(0)), 0
 End Function
 
-Public Function CreateVertexBuffer(ByRef polygon() As VERTEX, ByVal VertCount As Long) As Direct3DVertexBuffer8
+Public Function CreateVertexBuffer(ByRef polygon() As VERTEX, ByVal VertCount As Long) As Direct3DVertexBuffer9
      Dim BUFFERSIZE As Long
      
      'Calculate buffer size in bytes
@@ -1890,7 +1890,7 @@ Public Function CreateVertexBuffer(ByRef polygon() As VERTEX, ByVal VertCount As
      Set CreateVertexBuffer = D3DD.CreateVertexBuffer(BUFFERSIZE, D3DUSAGE_DYNAMIC Or D3DUSAGE_WRITEONLY, VERTEXFVF, D3DPOOL_DEFAULT)
      
      'Copy the vertices to the buffer
-     D3DVertexBuffer8SetData CreateVertexBuffer, 0, BUFFERSIZE, D3DLOCK_DISCARD, polygon(0)
+     CreateVertexBuffer.SetData 0, BUFFERSIZE, VarPtr(polygon(0)), 0
 End Function
 
      
@@ -3543,7 +3543,7 @@ Private Sub MakeThingResources()
      
      'Load thingbox texture
      TextureFile = App.Path & "\Thingbox.tga"
-     Set tex_thingbox = D3DX.CreateTextureFromFileEx(D3DD, TextureFile, D3DX_DEFAULT, D3DX_DEFAULT, _
+     Set tex_thingbox = CreateTextureFromFileEx(D3DD, TextureFile, D3DX_DEFAULT, D3DX_DEFAULT, _
                                                   D3DX_DEFAULT, 0, D3DFMT_UNKNOWN, _
                                                   D3DPOOL_MANAGED, D3DX_DEFAULT, _
                                                   D3DX_FILTER_LINEAR Or D3DX_FILTER_DITHER, _
@@ -3551,7 +3551,7 @@ Private Sub MakeThingResources()
      
      'Load thingarrow texture
      TextureFile = App.Path & "\Thingarrow.tga"
-     Set tex_thingarrow = D3DX.CreateTextureFromFileEx(D3DD, TextureFile, D3DX_DEFAULT, D3DX_DEFAULT, _
+     Set tex_thingarrow = CreateTextureFromFileEx(D3DD, TextureFile, D3DX_DEFAULT, D3DX_DEFAULT, _
                                                   D3DX_DEFAULT, 0, D3DFMT_UNKNOWN, _
                                                   D3DPOOL_MANAGED, D3DX_DEFAULT, _
                                                   D3DX_FILTER_LINEAR Or D3DX_FILTER_DITHER, _
@@ -3611,36 +3611,36 @@ Private Sub SetTextureFilters(ByVal ForceBilinear As Boolean)
      If (ForceBilinear = True) Then
           
           'Set up bilinear texture filtering
-          D3DD.SetTextureStageState 0, D3DTSS_MIPFILTER, D3DTEXF_NONE
-          D3DD.SetTextureStageState 0, D3DTSS_MINFILTER, D3DTEXF_LINEAR
-          D3DD.SetTextureStageState 0, D3DTSS_MAGFILTER, D3DTEXF_LINEAR
+          D3DD.SetSamplerState 0, D3DSAMP_MIPFILTER, D3DTEXF_NONE
+          D3DD.SetSamplerState 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR
+          D3DD.SetSamplerState 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR
      Else
           
           'Check if trilinear is configured
           If (Val(Config("texturefilter")) = TF_LINEAR_MIPMAP_LINEAR) Then
                
                'Set up bilinear texture filtering
-               D3DD.SetTextureStageState 0, D3DTSS_MIPFILTER, D3DTEXF_LINEAR
-               D3DD.SetTextureStageState 0, D3DTSS_MINFILTER, D3DTEXF_LINEAR
-               D3DD.SetTextureStageState 0, D3DTSS_MAGFILTER, D3DTEXF_LINEAR
+               D3DD.SetSamplerState 0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR
+               D3DD.SetSamplerState 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR
+               D3DD.SetSamplerState 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR
                
           'Check if bilinear is configured
           ElseIf (Val(Config("texturefilter")) = TF_LINEAR_MIPMAP_NEAREST) Then
                
                'Set up bilinear texture filtering
-               D3DD.SetTextureStageState 0, D3DTSS_MIPFILTER, D3DTEXF_NONE
-               D3DD.SetTextureStageState 0, D3DTSS_MINFILTER, D3DTEXF_LINEAR
-               D3DD.SetTextureStageState 0, D3DTSS_MAGFILTER, D3DTEXF_LINEAR
+               D3DD.SetSamplerState 0, D3DSAMP_MIPFILTER, D3DTEXF_NONE
+               D3DD.SetSamplerState 0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR
+               D3DD.SetSamplerState 0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR
                
           'Dont use texture filtering
           Else
                
                'Disable texture filtering
-               D3DD.SetTextureStageState 0, D3DTSS_MIPFILTER, D3DTEXF_NONE
-               D3DD.SetTextureStageState 0, D3DTSS_MINFILTER, D3DTEXF_POINT
-               D3DD.SetTextureStageState 0, D3DTSS_MAGFILTER, D3DTEXF_POINT
-               D3DD.SetTextureStageState 0, D3DTSS_MINFILTER, D3DTEXF_NONE
-               D3DD.SetTextureStageState 0, D3DTSS_MAGFILTER, D3DTEXF_NONE
+               D3DD.SetSamplerState 0, D3DSAMP_MIPFILTER, D3DTEXF_NONE
+               D3DD.SetSamplerState 0, D3DSAMP_MINFILTER, D3DTEXF_POINT
+               D3DD.SetSamplerState 0, D3DSAMP_MAGFILTER, D3DTEXF_POINT
+               D3DD.SetSamplerState 0, D3DSAMP_MINFILTER, D3DTEXF_NONE
+               D3DD.SetSamplerState 0, D3DSAMP_MAGFILTER, D3DTEXF_NONE
           End If
      End If
 End Sub
@@ -3913,11 +3913,11 @@ Private Sub MakeCrosshair()
      CrosshairFile = App.Path & "\Crosshair.bmp"
      
      'Create Direct3D Texture from file
-     Set tex_crosshair = D3DX.CreateTextureFromFileEx(D3DD, CrosshairFile, D3DX_DEFAULT, D3DX_DEFAULT, _
+     Set tex_crosshair = CreateTextureFromFileEx(D3DD, CrosshairFile, D3DX_DEFAULT, D3DX_DEFAULT, _
                                                   D3DX_DEFAULT, 0, D3DFMT_UNKNOWN, _
                                                   D3DPOOL_MANAGED, D3DX_DEFAULT, _
                                                   D3DX_FILTER_LINEAR Or D3DX_FILTER_DITHER, _
-                                                  &HFF000000, CrosshairFileInfo, ByVal 0)
+                                                  &HFF000000, VarPtr(CrosshairFileInfo), ByVal 0)
      
      'Determine crosshair size
      CrosshairInfo = CrosshairFileInfo
@@ -3968,7 +3968,7 @@ Private Sub MakeCrosshair()
      Set r_crosshair = D3DD.CreateVertexBuffer(BUFFERSIZE, D3DUSAGE_DYNAMIC Or D3DUSAGE_WRITEONLY, TLVERTEXFVF, D3DPOOL_DEFAULT)
      
      'Copy the vertices to the buffer
-     D3DVertexBuffer8SetData r_crosshair, 0, BUFFERSIZE, D3DLOCK_DISCARD, CrosshairPoly(0)
+     r_crosshair.SetData 0, BUFFERSIZE, VarPtr(CrosshairPoly(0)), 0
 End Sub
 
 Private Sub MakeExtraTextures()
@@ -3978,7 +3978,7 @@ Private Sub MakeExtraTextures()
      TextureFile = App.Path & "\Unknown.bmp"
      
      'Create Direct3D Texture from file
-     Set tex_unknown = D3DX.CreateTextureFromFileEx(D3DD, TextureFile, D3DX_DEFAULT, D3DX_DEFAULT, _
+     Set tex_unknown = CreateTextureFromFileEx(D3DD, TextureFile, D3DX_DEFAULT, D3DX_DEFAULT, _
                                                   D3DX_DEFAULT, 0, D3DFMT_UNKNOWN, _
                                                   D3DPOOL_MANAGED, D3DX_DEFAULT, _
                                                   D3DX_FILTER_LINEAR Or D3DX_FILTER_DITHER, _
@@ -3988,7 +3988,7 @@ Private Sub MakeExtraTextures()
      TextureFile = App.Path & "\Missing.bmp"
      
      'Create Direct3D Texture from file
-     Set tex_missing = D3DX.CreateTextureFromFileEx(D3DD, TextureFile, D3DX_DEFAULT, D3DX_DEFAULT, _
+     Set tex_missing = CreateTextureFromFileEx(D3DD, TextureFile, D3DX_DEFAULT, D3DX_DEFAULT, _
                                                   D3DX_DEFAULT, 0, D3DFMT_UNKNOWN, _
                                                   D3DPOOL_MANAGED, D3DX_DEFAULT, _
                                                   D3DX_FILTER_LINEAR Or D3DX_FILTER_DITHER, _
@@ -4047,7 +4047,7 @@ Private Sub MakeInfoPanel()
      Set r_infopanel = D3DD.CreateVertexBuffer(BUFFERSIZE, D3DUSAGE_DYNAMIC Or D3DUSAGE_WRITEONLY, TLVERTEXFVF, D3DPOOL_DEFAULT)
      
      'Copy the vertices to the buffer
-     D3DVertexBuffer8SetData r_infopanel, 0, BUFFERSIZE, D3DLOCK_DISCARD, PanelPoly(0)
+     r_infopanel.SetData 0, BUFFERSIZE, VarPtr(PanelPoly(0)), 0
 End Sub
 
 Private Sub MakeLightingTables()
@@ -4089,7 +4089,7 @@ Private Sub MakeTextFont()
      FontData = App.Path & "\Font.fnt"
      
      'Create Direct3D Texture from file
-     Set tex_font = D3DX.CreateTextureFromFileEx(D3DD, FontTexture, D3DX_DEFAULT, D3DX_DEFAULT, _
+     Set tex_font = CreateTextureFromFileEx(D3DD, FontTexture, D3DX_DEFAULT, D3DX_DEFAULT, _
                                                   D3DX_DEFAULT, 0, D3DFMT_UNKNOWN, _
                                                   D3DPOOL_MANAGED, D3DX_DEFAULT, _
                                                   D3DX_FILTER_LINEAR Or D3DX_FILTER_DITHER, _
@@ -4752,7 +4752,9 @@ Public Sub PollMouse()
      Dim LastIndex As Long
      
      'Get data, if it fails try to acquire the mouse again
-     numitems = DIMouse.GetDeviceData(DIDData, DIGDD_DEFAULT)
+     'numitems = DIMouse.GetDeviceData(DIDData, DIGDD_DEFAULT)
+     numitems = 20
+     DIMouse.GetDeviceData Len(DIDData(1)), DIDData(1), numitems, 0
      If Err.number Then Exit Sub
      
      'Check how we should process data
@@ -4869,10 +4871,12 @@ Public Sub FreeMouse()
      While ShowCursor(True) < 0: Wend
      
      'Stop polling mouse events
-     DIMouse.Unacquire
+     If Not DIMouse Is Nothing Then
+          DIMouse.Unacquire
+     End If
      
      'Free the cursor movement
-     ClipCursor ByVal 0&
+     ClipCursor ByVal 0
      
      'Disregard errors
      Err.Clear
@@ -4889,7 +4893,7 @@ Private Sub PositionCamera()
      LookAt.Z = Position.Z + sIn(VAngle) * c_videoviewdistance
      
      'Make projection matrix
-     D3DXMatrixLookAtLH matrixView, Position, LookAt, Vector3D(0, 0, 1)
+     MatrixLookAtLH matrixView, Position, LookAt, Vector3D(0, 0, 1)
      
      'When in windowed mode, show coordinates
      If (Val(Config("windowedvideo"))) Then
@@ -4996,10 +5000,10 @@ Private Sub RenderCrosshair()
      D3DD.SetTexture 0, tex_crosshair
      
      'Set the data
-     D3DD.SetStreamSource 0, r_crosshair, TLVERTEXSTRIDE
+     D3DD.SetStreamSource 0, r_crosshair, 0, TLVERTEXSTRIDE
      
      'Set vertex format
-     D3DD.SetVertexShader TLVERTEXFVF
+     D3DD.SetFVF TLVERTEXFVF
      
      'Render the crosshair
      D3DD.DrawPrimitive D3DPT_TRIANGLESTRIP, 0, 2
@@ -5015,10 +5019,10 @@ Private Sub RenderInfoPanel()
      D3DD.SetTexture 0, Nothing
      
      'Set the data
-     D3DD.SetStreamSource 0, r_infopanel, TLVERTEXSTRIDE
+     D3DD.SetStreamSource 0, r_infopanel, 0, TLVERTEXSTRIDE
      
      'Set vertex format
-     D3DD.SetVertexShader TLVERTEXFVF
+     D3DD.SetFVF TLVERTEXFVF
      
      'Render the crosshair
      D3DD.DrawPrimitive D3DPT_TRIANGLESTRIP, 0, 2
@@ -5091,10 +5095,10 @@ Public Sub RenderMouse()
      D3DD.SetTexture 0, tex_crosshair
      
      'Set vertex format
-     D3DD.SetVertexShader TLVERTEXFVF
+     D3DD.SetFVF TLVERTEXFVF
      
      'Render the crosshair
-     D3DD.DrawPrimitiveUP D3DPT_TRIANGLESTRIP, 2, MousePoly(0), TLVERTEXSTRIDE
+     D3DD.DrawPrimitiveUP D3DPT_TRIANGLESTRIP, 2, VarPtr(MousePoly(0)), TLVERTEXSTRIDE
 End Sub
 
 Public Sub RenderSelection()
@@ -5158,10 +5162,10 @@ Public Sub RenderSelection()
                D3DD.SetTexture 0, Nothing
                
                'Set vertex format
-               D3DD.SetVertexShader TLVERTEXFVF
+               D3DD.SetFVF TLVERTEXFVF
                
                'Render the crosshair
-               D3DD.DrawPrimitiveUP D3DPT_TRIANGLESTRIP, 2, SelectionPoly(0), TLVERTEXSTRIDE
+               D3DD.DrawPrimitiveUP D3DPT_TRIANGLESTRIP, 2, VarPtr(SelectionPoly(0)), TLVERTEXSTRIDE
           End If
      End If
 End Sub
@@ -5193,10 +5197,10 @@ Private Sub RenderSidedefsLower()
                If IsTextureName(sidedefs(sd).lower) = False Then D3DD.SetRenderState D3DRS_AMBIENT, &HFFFFFFFF
                
                'Set the data
-               D3DD.SetStreamSource 0, SidedefLower(sd), VERTEXSTRIDE
+               D3DD.SetStreamSource 0, SidedefLower(sd), 0, VERTEXSTRIDE
                
                'Set vertex format
-               D3DD.SetVertexShader VERTEXFVF
+               D3DD.SetFVF VERTEXFVF
                
                'Render the floor
                D3DD.DrawPrimitive D3DPT_TRIANGLESTRIP, 0, 2
@@ -5234,10 +5238,10 @@ Private Sub RenderSidedefsMiddle()
                     If IsTextureName(sidedefs(sd).middle) = False Then D3DD.SetRenderState D3DRS_AMBIENT, &HFFFFFFFF
                     
                     'Set the data
-                    D3DD.SetStreamSource 0, SidedefMiddle(sd), VERTEXSTRIDE
+                    D3DD.SetStreamSource 0, SidedefMiddle(sd), 0, VERTEXSTRIDE
                     
                     'Set vertex format
-                    D3DD.SetVertexShader VERTEXFVF
+                    D3DD.SetFVF VERTEXFVF
                     
                     'Render the floor
                     D3DD.DrawPrimitive D3DPT_TRIANGLESTRIP, 0, 2
@@ -5276,10 +5280,10 @@ Private Sub RenderSidedefsWindows()
                     If IsTextureName(sidedefs(sd).middle) = False Then D3DD.SetRenderState D3DRS_AMBIENT, &HFFFFFFFF
                     
                     'Set the data
-                    D3DD.SetStreamSource 0, SidedefMiddle(sd), VERTEXSTRIDE
+                    D3DD.SetStreamSource 0, SidedefMiddle(sd), 0, VERTEXSTRIDE
                     
                     'Set vertex format
-                    D3DD.SetVertexShader VERTEXFVF
+                    D3DD.SetFVF VERTEXFVF
                     
                     'Render the floor
                     D3DD.DrawPrimitive D3DPT_TRIANGLESTRIP, 0, 2
@@ -5316,10 +5320,10 @@ Private Sub RenderSidedefsUpper()
                If IsTextureName(sidedefs(sd).upper) = False Then D3DD.SetRenderState D3DRS_AMBIENT, &HFFFFFFFF
                
                'Set the data
-               D3DD.SetStreamSource 0, SidedefUpper(sd), VERTEXSTRIDE
+               D3DD.SetStreamSource 0, SidedefUpper(sd), 0, VERTEXSTRIDE
                
                'Set vertex format
-               D3DD.SetVertexShader VERTEXFVF
+               D3DD.SetFVF VERTEXFVF
                
                'Render the floor
                D3DD.DrawPrimitive D3DPT_TRIANGLESTRIP, 0, 2
@@ -5358,10 +5362,10 @@ Private Sub RenderSubSectorCeilings()
                     D3DD.SetTexture 0, i_SectorCeilings(m_subsectors(ss).sector)
                     
                     'Set the floor data
-                    D3DD.SetStreamSource 0, SubSectorCeilings(ss), VERTEXSTRIDE
+                    D3DD.SetStreamSource 0, SubSectorCeilings(ss), 0, VERTEXSTRIDE
                     
                     'Set vertex format
-                    D3DD.SetVertexShader VERTEXFVF
+                    D3DD.SetFVF VERTEXFVF
                     
                     'Render the floor
                     D3DD.DrawPrimitive D3DPT_TRIANGLEFAN, 0, (m_subsectors(ss).numvertices - 2)
@@ -5401,10 +5405,10 @@ Private Sub RenderSubSectorFloors()
                     D3DD.SetTexture 0, i_SectorFloors(m_subsectors(ss).sector)
                     
                     'Set the floor data
-                    D3DD.SetStreamSource 0, SubSectorFloors(ss), VERTEXSTRIDE
+                    D3DD.SetStreamSource 0, SubSectorFloors(ss), 0, VERTEXSTRIDE
                     
                     'Set vertex format
-                    D3DD.SetVertexShader VERTEXFVF
+                    D3DD.SetFVF VERTEXFVF
                     
                     'Render the floor
                     D3DD.DrawPrimitive D3DPT_TRIANGLEFAN, 0, (m_subsectors(ss).numvertices - 2)
@@ -5425,7 +5429,6 @@ Private Sub RenderThings()
      Dim matrixBox As D3DMATRIX
      Dim matrixSprite As D3DMATRIX
      Dim matrixArrow As D3DMATRIX
-     Dim matrixIdentity As D3DMATRIX
      Dim matrixTexture As D3DMATRIX
      Dim thingz As Long
      Dim spriteoffsetz As Long
@@ -5436,10 +5439,7 @@ Private Sub RenderThings()
      Dim floorheight As Single
      
      'Set vertex format
-     D3DD.SetVertexShader VERTEXFVF
-     
-     'Create identity matrix
-     D3DXMatrixIdentity matrixIdentity
+     D3DD.SetFVF VERTEXFVF
      
      'Dividers
      Div255 = 1 / 255
@@ -5503,7 +5503,7 @@ Private Sub RenderThings()
                     If (sectorcolor.b > 1) Then sectorcolor.b = 1
                     
                     'Multiply color with sector brightness
-                    D3DXColorModulate thingcolor, thingcolor, sectorcolor
+                    ColorModulate thingcolor, thingcolor, sectorcolor
                     
                     'Use the fog as well
                     D3DD.SetRenderState D3DRS_FOGDENSITY, t_fogness(sectors(things(t).sector).Brightness)
@@ -5526,20 +5526,20 @@ Private Sub RenderThings()
           End If
           
           'Create scale
-          D3DXMatrixScaling matrixScale, CSng(things(t).size * 2) - 0.4, CSng(things(t).size * 2) - 0.4, CSng(things(t).height) - 0.4
+          MatrixScaling matrixScale, CSng(things(t).size * 2) - 0.4, CSng(things(t).size * 2) - 0.4, CSng(things(t).height) - 0.4
           
           'Create translation
-          D3DXMatrixTranslation matrixTranslate, things(t).x * MAP_RENDER_SCALE, -things(t).y * MAP_RENDER_SCALE, CSng(thingz) * MAP_RENDER_SCALE + 0.002
+          MatrixTranslation matrixTranslate, things(t).x * MAP_RENDER_SCALE, -things(t).y * MAP_RENDER_SCALE, CSng(thingz) * MAP_RENDER_SCALE + 0.002
           
           'Create rotation (thing angle)
-          D3DXMatrixRotationZ matrixRotate, CSng(270 - things(t).angle) * PiDivMul
+          MatrixRotationZ matrixRotate, CSng(270 - things(t).angle) * PiDivMul
           
           'Multiply matrices
-          matrixBox = matrixIdentity
-          D3DXMatrixMultiply matrixBox, matrixBox, matrixScale
-          If (things(t).image <> TI_DOT) Then D3DXMatrixMultiply matrixArrow, matrixBox, matrixRotate
-          D3DXMatrixMultiply matrixBox, matrixBox, matrixTranslate
-          If (things(t).image <> TI_DOT) Then D3DXMatrixMultiply matrixArrow, matrixArrow, matrixTranslate
+          MatrixIdentity matrixBox
+          MatrixMultiply matrixBox, matrixBox, matrixScale
+          If (things(t).image <> TI_DOT) Then MatrixMultiply matrixArrow, matrixBox, matrixRotate
+          MatrixMultiply matrixBox, matrixBox, matrixTranslate
+          If (things(t).image <> TI_DOT) Then MatrixMultiply matrixArrow, matrixArrow, matrixTranslate
           
           'Do we want to see an arrow?
           If (things(t).image <> TI_DOT) Then
@@ -5561,7 +5561,7 @@ Private Sub RenderThings()
                D3DD.SetTexture 0, tex_thingarrow
                
                'Set the data
-               D3DD.SetStreamSource 0, r_thingarrow, VERTEXSTRIDE
+               D3DD.SetStreamSource 0, r_thingarrow, 0, VERTEXSTRIDE
                
                'Render the thing arrow
                D3DD.DrawPrimitive D3DPT_TRIANGLESTRIP, 0, 2
@@ -5585,13 +5585,13 @@ Private Sub RenderThings()
                D3DD.SetTexture 0, Sprite.D3DTexture
                
                'Create texture coordinates matrix
-               D3DXMatrixScaling matrixTexture, Sprite.d3dscalewidth, Sprite.d3dscaleheight, 0
+               MatrixScaling matrixTexture, Sprite.d3dscalewidth, Sprite.d3dscaleheight, 0
                
                'Create scale
-               D3DXMatrixScaling matrixScale, Sprite.width, 1, Sprite.height
+               MatrixScaling matrixScale, Sprite.width, 1, Sprite.height
                
                'Create rotation (billboarding)
-               D3DXMatrixRotationZ matrixRotate, pi - HAngle
+               MatrixRotationZ matrixRotate, pi - HAngle
                
                'Check if sprite hangs from ceiling
                If (things(t).hangs) Then
@@ -5605,28 +5605,28 @@ Private Sub RenderThings()
                End If
                
                'Create translation
-               D3DXMatrixTranslation matrixTranslate, things(t).x * MAP_RENDER_SCALE, -things(t).y * MAP_RENDER_SCALE, (thingz + spriteoffsetz) * MAP_RENDER_SCALE
+               MatrixTranslation matrixTranslate, things(t).x * MAP_RENDER_SCALE, -things(t).y * MAP_RENDER_SCALE, (thingz + spriteoffsetz) * MAP_RENDER_SCALE
                
                'Multiply matrices
-               matrixSprite = matrixIdentity
-               D3DXMatrixMultiply matrixSprite, matrixSprite, matrixScale
-               D3DXMatrixMultiply matrixSprite, matrixSprite, matrixRotate
-               D3DXMatrixMultiply matrixSprite, matrixSprite, matrixTranslate
+               MatrixIdentity matrixSprite
+               MatrixMultiply matrixSprite, matrixSprite, matrixScale
+               MatrixMultiply matrixSprite, matrixSprite, matrixRotate
+               MatrixMultiply matrixSprite, matrixSprite, matrixTranslate
                
                'Apply matrices
                D3DD.SetTransform D3DTS_WORLD, matrixSprite
                D3DD.SetTransform D3DTS_TEXTURE0, matrixTexture
                
                'Set the data
-               D3DD.SetStreamSource 0, r_thingsprite, VERTEXSTRIDE
+               D3DD.SetStreamSource 0, r_thingsprite, 0, VERTEXSTRIDE
                
                'Turn on alpha test and depth buffer writing
                D3DD.SetRenderState D3DRS_ZWRITEENABLE, 1
                D3DD.SetRenderState D3DRS_ALPHATESTENABLE, 1
                
                'Set texture stages
-               D3DD.SetTextureStageState 0, D3DTSS_ADDRESSU, D3DTADDRESS_BORDER
-               D3DD.SetTextureStageState 0, D3DTSS_ADDRESSV, D3DTADDRESS_BORDER
+               D3DD.SetSamplerState 0, D3DSAMP_ADDRESSU, D3DTADDRESS_BORDER
+               D3DD.SetSamplerState 0, D3DSAMP_ADDRESSV, D3DTADDRESS_BORDER
                D3DD.SetTextureStageState 0, D3DTSS_TEXTURETRANSFORMFLAGS, D3DTTFF_COUNT2
                
                'Render the thing box
@@ -5641,8 +5641,8 @@ Private Sub RenderThings()
           D3DD.SetRenderState D3DRS_ALPHATESTENABLE, 0
           
           'Repeat textures
-          D3DD.SetTextureStageState 0, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP
-          D3DD.SetTextureStageState 0, D3DTSS_ADDRESSV, D3DTADDRESS_WRAP
+          D3DD.SetSamplerState 0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP
+          D3DD.SetSamplerState 0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP
           
           'Apply color
           D3DD.SetRenderState D3DRS_AMBIENT, D3DColorMake(thingcolor.r, thingcolor.g, thingcolor.b, 1)
@@ -5654,7 +5654,7 @@ Private Sub RenderThings()
           D3DD.SetTexture 0, tex_thingbox
           
           'Set the data
-          D3DD.SetStreamSource 0, r_thingboxvb, VERTEXSTRIDE
+          D3DD.SetStreamSource 0, r_thingboxvb, 0, VERTEXSTRIDE
           
           'Render the thing box
           D3DD.DrawPrimitive D3DPT_TRIANGLELIST, 0, 12
@@ -5663,14 +5663,14 @@ Private Sub RenderThings()
           D3DD.SetTexture 0, Nothing
           
           'Set the data
-          D3DD.SetStreamSource 0, r_thingboxlines, VERTEXSTRIDE
+          D3DD.SetStreamSource 0, r_thingboxlines, 0, VERTEXSTRIDE
           
           'Render the thing box lines
           D3DD.DrawPrimitive D3DPT_LINELIST, 0, 12
      Next ti
      
      'No more indices
-     D3DD.SetIndices Nothing, 0
+     'D3DD.SetIndices Nothing
      
      'Restore matrix
      D3DD.SetTransform D3DTS_WORLD, matrixWorld
@@ -5690,10 +5690,10 @@ Private Sub RenderTexts()
      If Not (r_maintext Is Nothing) Then
           
           'Set the data
-          D3DD.SetStreamSource 0, r_maintext, TLVERTEXSTRIDE
+          D3DD.SetStreamSource 0, r_maintext, 0, TLVERTEXSTRIDE
           
           'Set vertex format
-          D3DD.SetVertexShader TLVERTEXFVF
+          D3DD.SetFVF TLVERTEXFVF
           
           'Render the text
           D3DD.DrawPrimitive D3DPT_TRIANGLESTRIP, 0, r_nummaintextfaces
@@ -5703,10 +5703,10 @@ Private Sub RenderTexts()
      If Not (r_subtext Is Nothing) Then
           
           'Set the data
-          D3DD.SetStreamSource 0, r_subtext, TLVERTEXSTRIDE
+          D3DD.SetStreamSource 0, r_subtext, 0, TLVERTEXSTRIDE
           
           'Set vertex format
-          D3DD.SetVertexShader TLVERTEXFVF
+          D3DD.SetFVF TLVERTEXFVF
           
           'Render the text
           D3DD.DrawPrimitive D3DPT_TRIANGLESTRIP, 0, r_numsubtextfaces
@@ -5724,7 +5724,7 @@ Private Sub RenderInfoTexts()
      D3DD.SetTexture 0, tex_font
      
      'Set vertex format
-     D3DD.SetVertexShader TLVERTEXFVF
+     D3DD.SetFVF TLVERTEXFVF
      
      'Go for all info panel texts
      For i = 0 To 9
@@ -5733,7 +5733,7 @@ Private Sub RenderInfoTexts()
           If (Not (r_infotexts(i) Is Nothing)) And (r_numinfotextfaces(i) > 0) Then
                
                'Set the data
-               D3DD.SetStreamSource 0, r_infotexts(i), TLVERTEXSTRIDE
+               D3DD.SetStreamSource 0, r_infotexts(i), 0, TLVERTEXSTRIDE
                
                'Render the text
                D3DD.DrawPrimitive D3DPT_TRIANGLESTRIP, 0, r_numinfotextfaces(i)
@@ -5762,10 +5762,10 @@ Private Sub RenderTexturePreviews()
                End If
                
                'Set the data
-               D3DD.SetStreamSource 0, r_texpoly(i), TLVERTEXSTRIDE
+               D3DD.SetStreamSource 0, r_texpoly(i), 0, TLVERTEXSTRIDE
                
                'Set vertex format
-               D3DD.SetVertexShader TLVERTEXFVF
+               D3DD.SetFVF TLVERTEXFVF
                
                'Render the crosshair
                D3DD.DrawPrimitive D3DPT_TRIANGLESTRIP, 0, 2
@@ -5786,10 +5786,10 @@ Private Sub RenderTextureTexts()
      If Not (r_texdesc Is Nothing) Then
           
           'Set the data
-          D3DD.SetStreamSource 0, r_texdesc, TLVERTEXSTRIDE
+          D3DD.SetStreamSource 0, r_texdesc, 0, TLVERTEXSTRIDE
           
           'Set vertex format
-          D3DD.SetVertexShader TLVERTEXFVF
+          D3DD.SetFVF TLVERTEXFVF
           
           'Render the text
           D3DD.DrawPrimitive D3DPT_TRIANGLESTRIP, 0, r_numtexdescfaces
@@ -5799,10 +5799,10 @@ Private Sub RenderTextureTexts()
      If (Not (r_texdesc Is Nothing)) And (r_numtexnamefaces > 0) Then
           
           'Set the data
-          D3DD.SetStreamSource 0, r_texname, TLVERTEXSTRIDE
+          D3DD.SetStreamSource 0, r_texname, 0, TLVERTEXSTRIDE
           
           'Set vertex format
-          D3DD.SetVertexShader TLVERTEXFVF
+          D3DD.SetFVF TLVERTEXFVF
           
           'Render the text
           D3DD.DrawPrimitive D3DPT_TRIANGLESTRIP, 0, r_numtexnamefaces
@@ -5885,7 +5885,7 @@ Public Sub RunSingleFrame(Optional ByVal ProcessMap As Long = True, Optional ByV
      
      
      '===== Start scene
-     D3DD.Clear 0, ByVal 0, D3DCLEAR_TARGET Or D3DCLEAR_ZBUFFER, Val(Config("palette")("CLR_BACKGROUND")), 1, 0
+     D3DD.Clear D3DCLEAR_TARGET Or D3DCLEAR_ZBUFFER, Val(Config("palette")("CLR_BACKGROUND")), 1, 0
      'D3DD.Clear 0, ByVal 0, D3DCLEAR_ZBUFFER, 0, 1, 0
      D3DD.BeginScene
      
@@ -5900,8 +5900,8 @@ Public Sub RunSingleFrame(Optional ByVal ProcessMap As Long = True, Optional ByV
      D3DD.SetRenderState D3DRS_LIGHTING, 1
      D3DD.SetRenderState D3DRS_AMBIENT, D3DColorMake(1, 1, 1, 1)
      D3DD.SetRenderState D3DRS_ZWRITEENABLE, 1
-     D3DD.SetTextureStageState 0, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP
-     D3DD.SetTextureStageState 0, D3DTSS_ADDRESSV, D3DTADDRESS_WRAP
+     D3DD.SetSamplerState 0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP
+     D3DD.SetSamplerState 0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP
      'D3DD.SetRenderState D3DRS_FOGDENSITY, 0
      
      'Check if map rendering is to be done
@@ -5978,7 +5978,7 @@ Public Sub RunSingleFrame(Optional ByVal ProcessMap As Long = True, Optional ByV
      D3DD.EndScene
      
      '===== Present scene
-     D3DD.Present ByVal 0, ByVal 0, 0, ByVal 0
+     D3DD.Present
 End Sub
 
 Private Function RunTextureSelect(ByVal CurrentTexture As String, ByVal UseFlats As Boolean) As String
@@ -6048,7 +6048,7 @@ Private Function RunTextureSelect(ByVal CurrentTexture As String, ByVal UseFlats
           End If
           
           '===== Start scene
-          D3DD.Clear 0, ByVal 0, D3DCLEAR_TARGET Or D3DCLEAR_ZBUFFER, Val(Config("palette")("CLR_BACKGROUND")), 1, 0
+          D3DD.Clear D3DCLEAR_TARGET Or D3DCLEAR_ZBUFFER, Val(Config("palette")("CLR_BACKGROUND")), 1, 0
           D3DD.BeginScene
           
           'Apply Matrices
@@ -6088,7 +6088,7 @@ Private Function RunTextureSelect(ByVal CurrentTexture As String, ByVal UseFlats
           D3DD.EndScene
           
           '===== Present scene
-          D3DD.Present ByVal 0, ByVal 0, 0, ByVal 0
+          D3DD.Present
           
           'Process messages
           DoEvents
@@ -6228,7 +6228,7 @@ Private Function RunThingSelect(ByVal CurrentThingType As Long) As Long
           End If
           
           '===== Start scene
-          D3DD.Clear 0, ByVal 0, D3DCLEAR_TARGET Or D3DCLEAR_ZBUFFER, Val(Config("palette")("CLR_BACKGROUND")), 1, 0
+          D3DD.Clear D3DCLEAR_TARGET Or D3DCLEAR_ZBUFFER, Val(Config("palette")("CLR_BACKGROUND")), 1, 0
           D3DD.BeginScene
           
           'Apply Matrices
@@ -6269,7 +6269,7 @@ Private Function RunThingSelect(ByVal CurrentThingType As Long) As Long
           D3DD.EndScene
           
           '===== Present scene
-          D3DD.Present ByVal 0, ByVal 0, 0, ByVal 0
+          D3DD.Present
           
           'Process messages
           DoEvents
@@ -6920,7 +6920,7 @@ Public Function Start3DMode() As Boolean
      On Error GoTo Error3DMode
      Dim ErrNum As Long, ErrDesc As String
      Dim MapRect As RECT
-     Dim Material As D3DMATERIAL8
+     Dim Material As D3DMATERIAL9
      Dim aspect As Single
      Dim line As Long
      
@@ -6982,9 +6982,9 @@ Public Function Start3DMode() As Boolean
      line = 7
      
      'Initialize matrices
-     D3DXMatrixIdentity matrixProject
-     D3DXMatrixIdentity matrixView
-     D3DXMatrixIdentity matrixWorld
+     MatrixIdentity matrixProject
+     MatrixIdentity matrixView
+     MatrixIdentity matrixWorld
      
      line = 8
      
@@ -7002,7 +7002,7 @@ Public Function Start3DMode() As Boolean
      line = 9
      
      'Make projection matrix
-     D3DXMatrixPerspectiveFovLH matrixProject, Config("videofov") / 57.29577951, aspect, 0.01, Config("videoviewdistance") * MAP_RENDER_SCALE
+     MatrixPerspectiveFovLH matrixProject, Config("videofov") / 57.29577951, 1 / aspect, 0.01, Config("videoviewdistance") * MAP_RENDER_SCALE
      
      line = 10
      
@@ -7034,19 +7034,19 @@ Public Function Start3DMode() As Boolean
      D3DD.SetRenderState D3DRS_CLIPPING, 1
      D3DD.SetRenderState D3DRS_DITHERENABLE, 1
      D3DD.SetRenderState D3DRS_LIGHTING, 1
-     D3DD.SetRenderState D3DRS_SHADEMODE, D3DSHADE_GOURAUD
+     D3DD.SetRenderState D3DRS_SHADEMODE, 2 'D3DSHADE_GOURAUD
      D3DD.SetRenderState D3DRS_SPECULARENABLE, 0
      D3DD.SetRenderState D3DRS_ZENABLE, 1
      D3DD.SetRenderState D3DRS_ZWRITEENABLE, 1
      D3DD.SetRenderState D3DRS_FILLMODE, D3DFILL_SOLID
-     D3DD.SetTextureStageState 0, D3DTSS_BORDERCOLOR, D3DColorMake(0, 0, 0, 0)
+     D3DD.SetSamplerState 0, D3DSAMP_BORDERCOLOR, D3DColorMake(0, 0, 0, 0)
      
      line = 13
      
      'Check if fog should be set
      If (Val(Config("showfog")) = vbChecked) Then
           D3DD.SetRenderState D3DRS_FOGCOLOR, Val(Config("palette")("CLR_BACKGROUND"))
-          D3DD.SetRenderState D3DRS_FOGTABLEMODE, D3DFOG_EXP2
+          D3DD.SetRenderState D3DRS_FOGTABLEMODE, 2 'D3DFOG_EXP2
           D3DD.SetRenderState D3DRS_FOGSTART, CVL(MKS(1))
           D3DD.SetRenderState D3DRS_FOGEND, CVL(MKS(20))
           D3DD.SetRenderState D3DRS_RANGEFOGENABLE, 0
@@ -7425,7 +7425,7 @@ End Sub
 Public Function VertexBufferFromText( _
                 ByRef Text As String, ByRef Position As SRECT, ByVal hAlign As ENUM_HALIGN, _
                 ByVal vAlign As ENUM_VALIGN, ByVal c_lt As Long, ByVal c_rt As Long, _
-                ByVal c_lb As Long, ByVal c_rb As Long, ByVal CharScale As Single) As Direct3DVertexBuffer8
+                ByVal c_lb As Long, ByVal c_rb As Long, ByVal CharScale As Single) As Direct3DVertexBuffer9
      
      'Dim TextVertex() As VertexFlat
      Dim TextVertex(1 To TEXT_MAXCHARS * 4) As TLVERTEX
@@ -7441,7 +7441,7 @@ Public Function VertexBufferFromText( _
      Set VertexBufferFromText = D3DD.CreateVertexBuffer(TextVertices * TLVERTEXSTRIDE, D3DUSAGE_WRITEONLY Or D3DUSAGE_DYNAMIC, TLVERTEXFVF, D3DPOOL_DEFAULT)
      
      'Load vertices into buffer
-     D3DVertexBuffer8SetData VertexBufferFromText, 0, TextVertices * TLVERTEXSTRIDE, D3DLOCK_DISCARD, TextVertex(1)
+     VertexBufferFromText.SetData 0, TextVertices * TLVERTEXSTRIDE, VarPtr(TextVertex(1)), 0
 End Function
 
      

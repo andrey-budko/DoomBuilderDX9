@@ -18,7 +18,7 @@
 #include <objbase.h>
 #include <limits.h>
 #include <string>
-#include <hash_map>
+//#include <hash_map>
 #include "const.h"
 #include "data.h"
 #include "math.h"

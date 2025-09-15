@@ -2743,7 +2743,7 @@ Private Sub cmbResolution_Change()
      If ChangeMode Then
           
           'Set the current mode
-          D3D.EnumAdapterModes cmbVideoDriver.ListIndex, cmbResolution.ItemData(cmbResolution.ListIndex), ModeInfo
+          D3D.EnumAdapterModes cmbVideoDriver.ListIndex, D3DFORMAT.D3DFMT_X8R8G8B8, cmbResolution.ItemData(cmbResolution.ListIndex), ModeInfo
           ModeWidth = ModeInfo.width
           ModeHeight = ModeInfo.height
           ModeFormat = ModeInfo.Format
@@ -2834,11 +2834,11 @@ Private Sub cmbVideoDriver_Change()
           cmbResolution.Clear
           
           'Fill with all modes that are allowed
-          ModesCount = D3D.GetAdapterModeCount(CurrentAdapter)
+          ModesCount = D3D.GetAdapterModeCount(CurrentAdapter, D3DFORMAT.D3DFMT_X8R8G8B8)
           For i = 0 To ModesCount - 1
                
                'Get the mode info
-               D3D.EnumAdapterModes CurrentAdapter, i, ModeInfo
+               D3D.EnumAdapterModes CurrentAdapter, D3DFORMAT.D3DFMT_X8R8G8B8, i, ModeInfo
                
                'Check if we allow this resolution
                If (ModeInfo.width >= 320) And _
@@ -3580,7 +3580,7 @@ End Sub
 Private Sub Setup3DPanel()
      On Error GoTo No3D
      Dim AdapterCount As Long
-     Dim AdapterInfo As D3DADAPTER_IDENTIFIER8
+     Dim AdapterInfo As D3DADAPTER_IDENTIFIER9
      Dim AdapterDescription As String
      Dim CurrentAdapter As String
      Dim i As Long
@@ -3615,7 +3615,7 @@ Private Sub Setup3DPanel()
           For i = 0 To (AdapterCount - 1)
                
                'Get the adapter info
-               D3D.GetAdapterIdentifier i, D3DENUM_NO_WHQL_LEVEL, AdapterInfo
+               D3D.GetAdapterIdentifier i, 0, AdapterInfo
                AdapterDescription = StringFromBytes(AdapterInfo.Description)
                
                'Add to the combo

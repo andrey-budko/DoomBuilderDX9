@@ -39,7 +39,6 @@ Source: OLEPRO32.DLL; DestDir: {sys}; Flags: regserver restartreplace sharedfile
 Source: scrrun.dll; DestDir: {sys}; Flags: regserver restartreplace sharedfile uninsneveruninstall
 Source: STDOLE2.TLB; DestDir: {sys}; Flags: restartreplace sharedfile uninsneveruninstall regtypelib noregerror
 Source: mscomctl.ocx; DestDir: {sys}; Flags: regserver restartreplace sharedfile uninsneveruninstall overwritereadonly
-Source: dx8vb.dll; DestDir: {sys}; Flags: restartreplace sharedfile uninsneveruninstall overwritereadonly regserver
 Source: Builder.exe; DestDir: {app}; Flags: ignoreversion
 Source: Boom.cfg; DestDir: {app}; Flags: ignoreversion
 Source: Builder.cfg; DestDir: {app}; Flags: onlyifdoesntexist

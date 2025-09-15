@@ -42,7 +42,7 @@ float __fastcall IntersectLine(FPOINT3D &r1, FPOINT3D &r2, float &x3, float &y3,
 	float div = (y4 - y3) * (r2.x - r1.x) - (x4 - x3) * (r2.y - r1.y);
 	
 	// Can this be tested?
-	if(abs(div) > 0.00001f)
+	if(fabs(div) > 0.00001f)
 	{
 		// Calculate the intersection distance from the ray
 		float u_ray = ((x4 - x3) * (r1.y - y3) - (y4 - y3) * (r1.x - x3)) / div;
@@ -70,7 +70,7 @@ float APIENTRY IntersectLineA(float x1, float y1, float x2, float y2, float x3, 
 	float div = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
 	
 	// Can this be tested?
-	if(abs(div) > 0.00001f)
+	if(fabs(div) > 0.00001f)
 	{
 		// Calculate the intersection distance from the ray
 		float u_ray = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) / div;
@@ -98,7 +98,7 @@ int __fastcall IntersectLine(MAPVERTEX* v1, MAPVERTEX* v2, int x3, int y3, int x
 	float div = (y4 - y3) * (v2->x - v1->x) - (x4 - x3) * (v2->y - v1->y);
 	
 	// Can this be tested?
-	if(abs(div) > 0.00001f)
+	if(fabs(div) > 0.00001f)
 	{
 		// Calculate the intersection distance from the ray
 		float u_ray = ((x4 - x3) * (v1->y - y3) - (y4 - y3) * (v1->x - x3)) / div;

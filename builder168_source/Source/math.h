@@ -170,7 +170,7 @@ float inline distance_to_line(float x1, float y1, float x2, float y2, float vx, 
 	float ld = distance(x1, y1, x2, y2);
 	
 	// Check if not zero length
-	if(abs(ld) > SMALL_FLOAT)
+	if(fabs(ld) > SMALL_FLOAT)
 	{
 		// Get the intersection offset
 		u = ((vx - x1) * (x2 - x1) + (vy - y1) * (y2 - y1)) / (ld * ld);
@@ -238,7 +238,7 @@ FPOINT3D inline normalize3(FPOINT3D v)
 {
 	FPOINT3D u;
 	float norm = sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
-	if(abs(norm) > SMALL_FLOAT)
+	if(fabs(norm) > SMALL_FLOAT)
 	{
 		float scl = 1.0f / norm;
 		u.x = v.x * scl;

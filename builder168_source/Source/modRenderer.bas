@@ -149,7 +149,7 @@ Public Declare Function SelectObject Lib "gdi32.dll" (ByVal hdc As Long, ByVal h
 Public Declare Function BitBlt Lib "gdi32.dll" (ByVal hDestDC As Long, ByVal x As Long, ByVal y As Long, ByVal nWidth As Long, ByVal nHeight As Long, ByVal hSrcDC As Long, ByVal xSrc As Long, ByVal ySrc As Long, ByVal dwRop As Long) As Long
 Public Declare Function DeleteObject Lib "gdi32.dll" (ByVal hObject As Long) As Long
 Public Declare Function DeleteDC Lib "gdi32.dll" (ByVal hdc As Long) As Long
-Public Declare Function VarPtrArray Lib "msvbvm50.dll" Alias "VarPtr" (Ptr() As Any) As Long
+Public Declare Function VarPtrArray Lib "msvbvm60.dll" Alias "VarPtr" (Ptr() As Any) As Long
 Public Declare Sub FillMemory Lib "kernel32.dll" Alias "RtlFillMemory" (Destination As Any, ByVal length As Long, ByVal Fill As Byte)
 Public Declare Sub Render_Init Lib "builder.dll" (ByRef scdata As Byte, ByVal scwidth As Long, ByVal scheight As Long)
 Public Declare Sub Render_Term Lib "builder.dll" ()
@@ -847,7 +847,8 @@ Public Sub InitializeMapRenderer(ByRef Rendertarget As PictureBox)
      If (mapfilename <> "") Then frmMain.picMap.BackColor = BITMAPRGBToWinLong(LongToBITMAPRGB(Val(Config("palette")("CLR_BACKGROUND"))))
      
      'Terminate last numbers pointer
-     DestroyBitmapPointer NumbersBitmapData
+     'Moved to TerminateMapRenderer, because of crash at exit
+     'DestroyBitmapPointer NumbersBitmapData
      
      'Measure in pixels
      Rendertarget.ScaleMode = vbPixels
@@ -1203,6 +1204,7 @@ Public Sub TerminateMapRenderer()
      'This will release the direct memory access pointer
      'CopyMemory ByVal VarPtrArray(ScreenData), 0&, 4
      DestroyBitmapPointer ScreenData
+     DestroyBitmapPointer NumbersBitmapData
      
      'Do the same in the DLL
      Render_Term

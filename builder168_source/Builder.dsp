@@ -129,6 +129,10 @@ SOURCE=.\Source\pick.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\Source\poly.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\Source\renderer.cpp
 # End Source File
 # Begin Source File

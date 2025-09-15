@@ -24,11 +24,9 @@ Public Declare Function QueryPerformanceFrequency Lib "kernel32" (ByRef lpFreque
 
 
 'DirectX objects
-Public DX As DirectX8
-Public D3D As Direct3D8
-Public D3DD As Direct3DDevice8
-Public D3DX As D3DX8
-Public D3D_BB As Direct3DSurface8
+Public D3D As Direct3D9
+Public D3DD As Direct3DDevice9
+Public D3D_BB As Direct3DSurface9
 Public DI As DirectInput8
 Public DIMouse As DirectInputDevice8
 
@@ -36,7 +34,7 @@ Public DIMouse As DirectInputDevice8
 Public Running3D As Boolean
 
 'Texture Format
-Public TEXTUREFORMAT As CONST_D3DFORMAT
+Public TEXTUREFORMAT As D3DFORMAT
 
 'Vertex Formats
 Public Const VERTEXFVF As Long = D3DFVF_XYZ Or D3DFVF_TEX1 'Or D3DFVF_NORMAL
@@ -68,7 +66,7 @@ End Type
 'Video information
 Public VideoParams As D3DPRESENT_PARAMETERS
 
-Public Function BitmapData_D3DTexture(ByRef BitmapData() As Byte, ByVal DataWidth As Long, ByVal BitmapHeight As Long, ByRef PaletteData() As BITMAPRGB, ByVal Padding As Boolean) As Direct3DTexture8
+Public Function BitmapData_D3DTexture(ByRef BitmapData() As Byte, ByVal DataWidth As Long, ByVal BitmapHeight As Long, ByRef PaletteData() As BITMAPRGB, ByVal Padding As Boolean) As Direct3DTexture9
      Dim TextureData() As Byte
      Dim TextureHeader As BITMAPFILEHEADER
      Dim TextureInfo As BITMAPINFOHEADER
@@ -156,8 +154,8 @@ Public Function BitmapData_D3DTexture(ByRef BitmapData() As Byte, ByVal DataWidt
      End If
      
      'Create Direct3D Texture from memory block
-     Set BitmapData_D3DTexture = D3DX.CreateTextureFromFileInMemoryEx( _
-                                   D3DD, TextureData(0), TextureMemSize, D3DX_DEFAULT, _
+     Set BitmapData_D3DTexture = CreateTextureFromFileInMemoryEx( _
+                                   D3DD, VarPtr(TextureData(0)), TextureMemSize, D3DX_DEFAULT, _
                                    D3DX_DEFAULT, D3DX_DEFAULT, 0, TEXTUREFORMAT, _
                                    D3DPOOL_MANAGED, D3DX_DEFAULT, D3DX_FILTER_DITHER, _
                                    &HFF000000, ByVal 0, ByVal 0)
@@ -166,48 +164,48 @@ Public Function BitmapData_D3DTexture(ByRef BitmapData() As Byte, ByVal DataWidt
      Erase TextureData()
 End Function
 
-Public Function BitsFromFormat(ByRef Format As CONST_D3DFORMAT) As Long
+Public Function BitsFromFormat(ByRef Format As D3DFORMAT) As Long
      
      'Return the number of bits each display format has
      Select Case Format
           
-          Case CONST_D3DFORMAT.D3DFMT_A1R5G5B5
+          Case D3DFORMAT.D3DFMT_A1R5G5B5
                BitsFromFormat = 16
           
-          Case CONST_D3DFORMAT.D3DFMT_A4R4G4B4
+          Case D3DFORMAT.D3DFMT_A4R4G4B4
                BitsFromFormat = 16
           
-          Case CONST_D3DFORMAT.D3DFMT_A8R3G3B2
+          Case D3DFORMAT.D3DFMT_A8R3G3B2
                BitsFromFormat = 16
           
-          Case CONST_D3DFORMAT.D3DFMT_A8R8G8B8
+          Case D3DFORMAT.D3DFMT_A8R8G8B8
                BitsFromFormat = 32
           
-          Case CONST_D3DFORMAT.D3DFMT_L6V5U5
+          Case D3DFORMAT.D3DFMT_L6V5U5
                BitsFromFormat = 16
           
-          Case CONST_D3DFORMAT.D3DFMT_Q8W8V8U8
+          Case D3DFORMAT.D3DFMT_Q8W8V8U8
                BitsFromFormat = 32
           
-          Case CONST_D3DFORMAT.D3DFMT_R3G3B2
+          Case D3DFORMAT.D3DFMT_R3G3B2
                BitsFromFormat = 8
           
-          Case CONST_D3DFORMAT.D3DFMT_R5G6B5
+          Case D3DFORMAT.D3DFMT_R5G6B5
                BitsFromFormat = 16
           
-          Case CONST_D3DFORMAT.D3DFMT_R8G8B8
+          Case D3DFORMAT.D3DFMT_R8G8B8
                BitsFromFormat = 24
           
-          Case CONST_D3DFORMAT.D3DFMT_X1R5G5B5
+          Case D3DFORMAT.D3DFMT_X1R5G5B5
                BitsFromFormat = 16
           
-          Case CONST_D3DFORMAT.D3DFMT_X4R4G4B4
+          Case D3DFORMAT.D3DFMT_X4R4G4B4
                BitsFromFormat = 16
           
-          Case CONST_D3DFORMAT.D3DFMT_X8L8V8U8
+          Case D3DFORMAT.D3DFMT_X8L8V8U8
                BitsFromFormat = 32
           
-          Case CONST_D3DFORMAT.D3DFMT_X8R8G8B8
+          Case D3DFORMAT.D3DFMT_X8R8G8B8
                BitsFromFormat = 32
                
      End Select
@@ -257,7 +255,7 @@ Public Sub CreateGammaCorrection(ByVal Gamma As Single, ByVal Brightness As Long
      Next i
      
      'Apply the ramp
-     D3DD.SetGammaRamp D3DSGR_NO_CALIBRATION, ramp
+     D3DD.SetGammaRamp D3DSGR_NO_CALIBRATION, VarPtr(ramp)
 End Sub
 
 Public Function InitDirectX() As Boolean
@@ -266,14 +264,8 @@ Public Function InitDirectX() As Boolean
      'Clear last error
      Err.Clear
      
-     'Create DirectX Object
-     Set DX = New DirectX8
-     
      'Create Direct3D Device
-     Set D3D = DX.Direct3DCreate
-     
-     'Create Direct3DX Object
-     Set D3DX = New D3DX8
+     Set D3D = DirectX9.CreateDirect3D
      
      'Leave now
      InitDirectX = True
@@ -282,9 +274,7 @@ Public Function InitDirectX() As Boolean
 InitError:
      
      'Clean up
-     Set D3DX = Nothing
      Set D3D = Nothing
-     Set DX = Nothing
      
      'Return false
      InitDirectX = False
@@ -292,11 +282,13 @@ End Function
 
 Public Function InitMouse() As Boolean
      On Local Error Resume Next    'If we cant capture it now, we'll do later
-     Dim DIProp As DIPROPLONG
+     Dim DIProp As DIPROPHEADER
      
      'Initialize Mouse
-     Set DIMouse = DI.CreateDevice("GUID_SysMouse")
-     DIMouse.SetCommonDataFormat DIFORMAT_MOUSE
+     Set DIMouse = DI.CreateDeviceMouse
+
+     'DIMouse.SetCommonDataFormat DIFORMAT_MOUSE
+     DIMouse.SetCommonDataFormatMouse
      
      'Get cooperative access
      Err.Clear
@@ -305,10 +297,11 @@ Public Function InitMouse() As Boolean
      Err.Clear
      
      'Set buffer size for mouse
-     DIProp.lHow = DIPH_DEVICE
-     DIProp.lObj = 0
-     DIProp.lData = 20
-     DIMouse.SetProperty "DIPROP_BUFFERSIZE", DIProp
+     'DIProp.lHow = DIPH_DEVICE
+     'DIProp.lObj = 0
+     'DIProp.lData = 20
+     'DIMouse.SetProperty "DIPROP_BUFFERSIZE", DIProp
+     DIMouse.SetPropertyBufferSize (20)
      
      'Acquire the mouse
      DIMouse.Acquire
@@ -318,7 +311,6 @@ End Function
 
 Public Sub StartDirectX()
      Dim Adapter As Long
-     Dim CurrentMode As D3DDISPLAYMODE
      
      'Initialize
      If InitDirectX Then
@@ -330,12 +322,6 @@ Public Sub StartDirectX()
           'Check if going windowed
           If (Val(Config("windowedvideo"))) Then
                
-               'Use the current display adapter
-               Adapter = D3DADAPTER_DEFAULT
-               
-               'Get the current display mode of the current adapter
-               D3D.GetAdapterDisplayMode Adapter, CurrentMode
-               
                'Pixels
                frmMain.picMap.ScaleMode = vbPixels
                
@@ -343,7 +329,7 @@ Public Sub StartDirectX()
                With VideoParams
                     .AutoDepthStencilFormat = D3DFMT_D16                   '16-bit depth buffer
                     .BackBufferCount = 1                                   '1 render target
-                    .BackBufferFormat = CurrentMode.Format
+                    .BackBufferFormat = D3DFMT_UNKNOWN
                     .BackBufferHeight = frmMain.picMap.ScaleHeight
                     .BackBufferWidth = frmMain.picMap.ScaleWidth
                     .FullScreen_RefreshRateInHz = 0
@@ -399,7 +385,7 @@ Public Sub StartDirectX()
           
           'Create Direct3D Device
           On Local Error Resume Next
-          Set D3DD = D3D.CreateDevice(Adapter, D3DDEVTYPE_HAL, frm3D.hWnd, D3DCREATE_SOFTWARE_VERTEXPROCESSING, VideoParams)
+          Set D3DD = D3D.CreateDevice(frm3D.hWnd, D3DCREATE_SOFTWARE_VERTEXPROCESSING, VideoParams)
           On Local Error GoTo 0
           
           'Check if any errors occurred
@@ -411,7 +397,7 @@ Public Sub StartDirectX()
                
                'Create a DirectInput object
                On Local Error Resume Next
-               Set DI = DX.DirectInputCreate
+               Set DI = DirectInputCreate
                On Local Error GoTo 0
                
                'Check if any errors occurred
@@ -422,10 +408,10 @@ Public Sub StartDirectX()
                Else
                     
                     'Clear buffers (get rid of noise)
-                    D3DD.Clear 0, ByVal 0, D3DCLEAR_TARGET Or D3DCLEAR_ZBUFFER, Val(Config("palette")("CLR_BACKGROUND")), 1, 0
-                    D3DD.Present ByVal 0, ByVal 0, 0, ByVal 0
-                    D3DD.Clear 0, ByVal 0, D3DCLEAR_TARGET Or D3DCLEAR_ZBUFFER, Val(Config("palette")("CLR_BACKGROUND")), 1, 0
-                    D3DD.Present ByVal 0, ByVal 0, 0, ByVal 0
+                    D3DD.Clear D3DCLEAR_TARGET Or D3DCLEAR_ZBUFFER, Val(Config("palette")("CLR_BACKGROUND")), 1, 0
+                    D3DD.Present
+                    D3DD.Clear D3DCLEAR_TARGET Or D3DCLEAR_ZBUFFER, Val(Config("palette")("CLR_BACKGROUND")), 1, 0
+                    D3DD.Present
                     
                     'Keep a references to the render target
                     'Set D3D_BB = D3DD.GetRenderTarget
@@ -441,7 +427,7 @@ Public Sub StartDirectX()
      End If
 End Sub
 
-Public Function StdPicture_D3DTexture(ByRef Bitmap As StdPicture) As Direct3DTexture8
+Public Function StdPicture_D3DTexture(ByRef Bitmap As StdPicture) As Direct3DTexture9
      Dim Tempfile As String
      
      'Check if we must make a temporary file
@@ -454,7 +440,7 @@ Public Function StdPicture_D3DTexture(ByRef Bitmap As StdPicture) As Direct3DTex
      SavePicture Bitmap, Tempfile
      
      'Create Direct3D Texture from file
-     Set StdPicture_D3DTexture = D3DX.CreateTextureFromFileEx( _
+     Set StdPicture_D3DTexture = CreateTextureFromFileEx( _
                                    D3DD, Tempfile, D3DX_DEFAULT, D3DX_DEFAULT, _
                                    0, 0, TEXTUREFORMAT, _
                                    D3DPOOL_DEFAULT, D3DX_DEFAULT, _
@@ -478,9 +464,7 @@ Public Sub TerminateDirectX()
      Set DIMouse = Nothing
      Set DI = Nothing
      Set D3DD = Nothing
-     Set D3DX = Nothing
      Set D3D = Nothing
-     Set DX = Nothing
      
      'Unload 3D rendering form
      Unload frm3D

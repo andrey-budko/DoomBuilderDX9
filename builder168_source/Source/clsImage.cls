@@ -62,7 +62,7 @@ Public d3dscalewidth As Single          'd3dscalewidth x d3dwidth = width
 Public d3dscaleheight As Single         'd3dscaleheight x d3dheight = height
 
 'Direct3D cached texture (all Windows versions)
-Public D3DTexture As Direct3DTexture8
+Public D3DTexture As Direct3DTexture9
 
 'Caching
 Private Bitmap As StdPicture  '<-- Windows 2000 and newer caches here (faster, but costs GDI)
@@ -330,7 +330,7 @@ Public Sub LoadD3DTexture(Optional ByVal Padding As Boolean = False)
           Set D3DTexture = BitmapData_D3DTexture(BitmapData(), BitmapWidth, height, playpal(), Padding)
           
           'Get the D3D texture size
-          D3DTexture.GetLevelDesc 0, texinfo
+          texinfo = D3DTexture.GetLevelDesc(0)
           d3dwidth = texinfo.width
           d3dheight = texinfo.height
           d3dscalewidth = CSng(width) / CSng(d3dwidth)

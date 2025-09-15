@@ -2308,6 +2308,9 @@ Private Sub Main()
      ChDrive left$(App.Path, 1)
      ChDir App.Path
      
+     'fix dx_vb.dll
+     Vec2LengthSq Vec2(1, 1)
+
      'Get the windows version
      DetectWindowsVersion
      

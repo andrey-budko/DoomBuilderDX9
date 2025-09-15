@@ -298,7 +298,7 @@ int APIENTRY PickObject(MAPVERTEX* vertices, MAPLINEDEF* linedefs, MAPSIDEDEF* s
 		if(s_found)
 		{
 			// Check if not aiming straight forward (then we can never hit the floor nor the ceiling)
-			if(abs(r2.z - r1.z) > 0.1f)
+			if(fabs(r2.z - r1.z) > 0.1f)
 			{
 				// Get the distance to possible intersection
 				i_distance = (sectorheight - r1.z) / (r2.z - r1.z);
