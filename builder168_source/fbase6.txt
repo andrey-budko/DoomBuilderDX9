@@ -1,0 +1,66 @@
+===========================================================================
+Advanced engine needed  : Boom compatible required, tested with ZDoom and Eternity
+Primary purpose         : Single
+===========================================================================
+Title                   : FBase 6: Remanasu
+Filename                : fbase6.wad
+Release date            : 8/31/03, updated 9/3/03
+Author                  : Boris Iwanski
+Email Address           : boris -at- slipgate.org
+			: boris -at- d00m.info
+Other Files By Author   : fbase1-5, some Skull Tag DM/CTF levels,
+			: 2 of FreeDoom's maps, have a look at
+			: http://boris.slipgate.org for a list of them
+Misc. Author Info       : 22 year old german Doomer
+
+Description             : I started this as a test map to learn to use
+			: Doom Builder. I think it turned out to be pretty
+			: cool :)
+			: NOTE: This is version 1.1 of the map. I fixed some bug
+			:	where the player was able to get the blue key by
+			:	running into the wall below it. Thanks to
+			:	SargeBaldy for finding out!
+			:	I also added Coop starts (no DM though). Happy
+			:	now Carn? :)
+
+Additional Credits to   : Pascal "gherkin" vd Heiden for the wonderful Doom Builder
+===========================================================================
+
+* Play Information *
+
+Game                    : DOOM2
+Map #                   : Map01
+Single Player           : Designed for
+Cooperative 2-4 Player  : Starts are there, but not tested
+Deathmatch 2-4 Player   : No
+Other game styles       : No
+Difficulty Settings     : Yes
+
+
+* Construction *
+
+Base                    : New from scratch
+Build Time              : About 7 days 
+Editor(s) used          : Doom Builder 0.04 build 86
+			: ZenNode 1.1.0
+Known Bugs              : none
+May Not Run With...     : Anything not Boom compatible
+
+
+* Copyright / Permissions *
+
+Authors (may NOT) use the contents of this file as a base for
+modification or reuse.  Permissions have been obtained from original 
+authors for any of their resources modified or included in this file.
+
+You MAY distribute this file, provided you include this text file, with
+no modifications.  You may distribute this file in any electronic
+format (BBS, Diskette, CD, etc) as long as you include this file 
+intact.  I have received permission from the original authors of any
+modified or included content in this file to allow further distribution.
+
+
+* Where to get the file that this text file describes *
+
+The Usual: ftp://archives.3dgamers.com/pub/idgames/ and mirrors
+Web sites: http://boris.slipgate.org

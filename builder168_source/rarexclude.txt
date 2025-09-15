@@ -1,0 +1,5 @@
+E:\Projects\Builder\Backup
+E:\Projects\Builder\Docs
+E:\Projects\Builder\Package
+E:\Projects\Builder\Source\Release
+E:\Projects\Builder\Source\Debug

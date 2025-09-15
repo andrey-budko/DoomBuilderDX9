@@ -1,0 +1,102 @@
+;;
+;;    Doom Builder
+;;    Copyright (c) 2003 Pascal vd Heiden, www.codeimp.com
+;;    This program is released under GNU General Public License
+;;
+;;    This program is distributed in the hope that it will be useful,
+;;    but WITHOUT ANY WARRANTY; without even the implied warranty of
+;;    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;;    GNU General Public License for more details.
+;;
+
+
+EXPORTS
+	
+	Render_Init
+	Render_Scale
+	Render_Term
+	Render_Clear
+	Render_Line
+	Render_LineSwitched
+	Render_LinedefLine
+	Render_LinedefLineSwitched
+	Render_DottedLine
+	Render_Box
+	Render_BoxSwitched
+	Render_RectSwitched
+	Render_Bitmap
+	Render_BitmapSwitched
+	Render_ScaledBitmap
+	Render_ScaledBitmapSwitched
+	
+	Render_AllLinedefs
+	Render_AllVertices
+	Render_AllThings
+	Render_AllThingsDarkened
+	Render_TaggedLinedefs
+	Render_TaggedSectors
+	Render_TaggedThings
+	Render_TaggedThingsNormal
+	Render_TaggedArgThings
+	Render_TaggedArgThingsNormal
+	Render_ChangingLengths
+	Render_NumberSwitched
+	Render_AllImpassableLinedefs
+	
+	BuildConversionTable
+	Flip_Flat
+	Draw_Image
+	Draw_Flat
+	Draw_BitmapP8
+	Draw_BitmapB5G6R5
+	Draw_BitmapB8G8R8
+	Draw_BitmapA8B8G8R8
+	
+	RoundVertices
+	Rereference_Vertices
+	Rereference_Sidedefs
+	Rereference_SidedefsLinedef
+	Rereference_Sectors
+	CountSectorSidedefs
+	CountVertexLinedefs
+	ResetSelections
+	NearestVertex
+	NearestSelectedVertex
+	NearestUnselectedVertex
+	NearestOtherVertex
+	NearestThing
+	NearestSelectedThing
+	NearestUnselectedThing
+	NearestLinedef
+	NearestSelectedLinedef
+	NearestUnselectedLinedef
+	NearestUnselectedUnreferencedLinedef
+	OverlappingUnselectedVertex
+	OverlappingUnselectedLinedef
+	IntersectSector
+	LinedefBetweenVertices
+	SetAllThingSectors
+	
+	TestUnclosedSector
+	TestStuckedThing
+	
+	UndoRedo_Init
+	UndoRedo_Term
+	UndoRedo_Put
+	UndoRedo_GetSizes
+	UndoRedo_GetImages
+	UndoRedo_Delete
+	
+	SetStructurePointers
+	DestroyStructurePointers
+	CreateSSectorReferences
+	PrepareAllSSectors
+	ProcessBSP
+	PickObject
+	SetFontChar
+	GetTextSize
+	CreateText
+	GetMissingEntries
+	ExportWavefrontObj
+	IntersectLineA
+	
